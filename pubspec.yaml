@@ -12,16 +12,23 @@ dependencies:
   flutter:
     sdk: flutter
 
+  get: ^3.26.0
   flutter_hooks: ^0.16.0
+  freezed_annotation: ^0.14.0
 
-  audioplayers: ^0.17.4
-  cupertino_icons: ^1.0.2
+  file_picker: any
 
-  flutter_dropzone: ^1.0.10
+  plugin_platform_interface: ^2.0.0
+  firebase_core: ^1.0.0
+  firebase_storage: ^8.0.0
+  cloud_firestore: ^1.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+  freezed: ^0.14.0
+  build_runner: ^1.11.5
 
 flutter:
   uses-material-design: true

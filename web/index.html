@@ -40,6 +40,24 @@
       });
     }
   </script>
+  
+  <script src="https://www.gstatic.com/firebasejs/8.2.10/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.2.10/firebase-storage.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.2.10/firebase-firestore.js"></script>
+  <script>
+    var firebaseConfig = {
+      apiKey: "AIzaSyDq6iixJuom9SSWY3rhsH-owMWr3PhYJbE",
+      authDomain: "dungeon-and-dragons-53283.firebaseapp.com",
+      projectId: "dungeon-and-dragons-53283",
+      storageBucket: "dungeon-and-dragons-53283.appspot.com",
+      messagingSenderId: "293822989858",
+      appId: "1:293822989858:web:93881edfc3dd047ba92c7b",
+      measurementId: "G-72SB9TZ669"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+  </script>
   <script src="main.dart.js" type="application/javascript"></script>
 </body>
 </html>
