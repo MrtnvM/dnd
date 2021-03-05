@@ -1,4 +1,5 @@
 import 'package:dnd/models/locations/location.dart';
+import 'package:dnd/presentation/enemies/enemy_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:get/get.dart';
@@ -65,9 +66,14 @@ class LocationPage extends HookWidget {
         children: [
           _buildBackground(imageAnimationController),
           _buildLocationTitle(),
+          _buildEnemy(),
         ],
       ),
     );
+  }
+
+  Widget _buildEnemy() {
+    return Center(child: EnemyWidget());
   }
 
   Widget _buildBackground(AnimationController controller) {
