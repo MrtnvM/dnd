@@ -4,8 +4,12 @@ import 'package:dnd/models/locations/location_data.dart';
 import 'package:dnd/services/storage_service.dart';
 import 'package:get/get.dart';
 
-class LocationController extends GetxController {
+class LocationController extends GetxController
+    with StateMixin<List<Location>> {
   final _firestore = FirebaseFirestore.instance;
+  var locations = <Location>[];
+
+  static LocationController get to => Get.find();
 
   Future<void> updateLocation(LocationData location) async {
     final storage = Get.find<StorageService>();
@@ -31,10 +35,20 @@ class LocationController extends GetxController {
   }
 
   Future<List<Location>> getLocations() async {
-    final snapshots = await _firestore.collection('locations').get();
-    final locations = snapshots.docs //
-        .map((s) => s.data())
-        .map((l) => Location.fromJson(l));
+    change(locations, status: RxStatus.loading());
+
+    try {
+      final snapshots = await _firestore.collection('locations').get();
+      locations = snapshots.docs //
+          .map((s) => s.data())
+          .map((l) => Location.fromJson(l))
+          .toList();
+
+      change(locations, status: RxStatus.success());
+    } catch (error) {
+      print(error);
+      change(locations, status: RxStatus.error());
+    }
 
     return locations;
   }
