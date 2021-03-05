@@ -10,6 +10,12 @@ class LocationPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final imageAnimationController = useAnimationController(
+      duration: const Duration(seconds: 20),
+      lowerBound: 1.0,
+      upperBound: 1.15,
+    );
+
     useEffect(() {
       final player = AudioPlayer();
 
@@ -34,21 +40,44 @@ class LocationPage extends HookWidget {
       };
     }, []);
 
+    useEffect(() {
+      const duration = const Duration(seconds: 15);
+      const curve = Curves.easeInOutCubic;
+      final controller = imageAnimationController;
+      var isPlaying = true;
+
+      VoidCallback playAnimation;
+      playAnimation = () async {
+        await controller.animateTo(1.05, curve: curve, duration: duration);
+
+        if (!isPlaying) return;
+        await controller.animateTo(1.0, curve: curve, duration: duration);
+
+        if (isPlaying) playAnimation();
+      };
+
+      playAnimation();
+      return imageAnimationController.dispose;
+    }, []);
+
     return Scaffold(
       body: Stack(
         children: [
-          _buildBackground(),
+          _buildBackground(imageAnimationController),
           _buildLocationTitle(),
         ],
       ),
     );
   }
 
-  Widget _buildBackground() {
+  Widget _buildBackground(AnimationController controller) {
     return Positioned.fill(
       child: FittedBox(
         fit: BoxFit.cover,
-        child: Image.network(location.imageUrl),
+        child: ScaleTransition(
+          scale: controller,
+          child: Image.network(location.imageUrl),
+        ),
       ),
     );
   }
