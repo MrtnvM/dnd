@@ -1,6 +1,7 @@
 import 'package:dnd/controllers/location_controller.dart';
 import 'package:dnd/models/locations/location.dart';
 import 'package:dnd/presentation/locations/create_location_page.dart';
+import 'package:dnd/presentation/locations/location_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -33,7 +34,7 @@ class LocationsPage extends StatelessWidget {
             onError: (error) => LocationsErrorStateWidget(),
           ),
           floatingActionButton: FloatingActionButton(
-            onPressed: () => Get.to(CreateLocationPage()),
+            onPressed: () => Get.to(() => CreateLocationPage()),
             child: Icon(Icons.add),
           ),
         );
@@ -98,36 +99,39 @@ class LocationItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Color(0xffcccccc),
-        ),
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: FittedBox(
-                fit: BoxFit.cover,
-                child: Image.network(location.imageUrl),
-              ),
-            ),
-            Container(
-              constraints: BoxConstraints.expand(),
-              color: Colors.grey.withAlpha(80),
-            ),
-            Positioned(
-              left: 16,
-              bottom: 16,
-              child: Text(
-                location.name ?? '',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 22,
+    return GestureDetector(
+      onTap: () => Get.to(() => LocationPage(location: location)),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Color(0xffcccccc),
+          ),
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: FittedBox(
+                  fit: BoxFit.cover,
+                  child: Image.network(location.imageUrl),
                 ),
               ),
-            )
-          ],
+              Container(
+                constraints: BoxConstraints.expand(),
+                color: Colors.grey.withAlpha(80),
+              ),
+              Positioned(
+                left: 16,
+                bottom: 16,
+                child: Text(
+                  location.name ?? '',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 22,
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
