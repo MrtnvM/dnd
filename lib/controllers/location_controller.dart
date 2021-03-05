@@ -11,11 +11,30 @@ class LocationController extends GetxController
 
   static LocationController get to => Get.find();
 
-  Future<void> updateLocation(LocationData location) async {
+  Future<void> updateLocation(
+    LocationData location, {
+    String existingImageUrl,
+    String existingTrackUrl,
+  }) async {
     final storage = Get.find<StorageService>();
 
-    final trackUrl = await storage.uploadAudio(location.name, location.track);
-    final imageUrl = await storage.uploadImage(location.name, location.image);
+    final trackUrl = location.track != null
+        ? await storage.uploadAudio(location.name, location.track)
+        : existingTrackUrl;
+
+    if (trackUrl == null) {
+      Get.snackbar('Эй, бро!', 'Выбери трек сначала');
+      return;
+    }
+
+    final imageUrl = location.image != null
+        ? await storage.uploadImage(location.name, location.image)
+        : existingImageUrl;
+
+    if (imageUrl == null) {
+      Get.snackbar('Эй, бро!', 'Выбери изображение локации сначала');
+      return;
+    }
 
     final locationModel = Location(
       name: location.name,
@@ -32,6 +51,8 @@ class LocationController extends GetxController
     } else {
       await docRef.set(locationJson);
     }
+
+    getLocations();
   }
 
   Future<List<Location>> getLocations() async {

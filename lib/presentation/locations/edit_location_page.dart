@@ -3,19 +3,35 @@ import 'dart:typed_data';
 import 'package:dnd/controllers/location_controller.dart';
 import 'package:dnd/hooks/file_hooks.dart';
 import 'package:dnd/hooks/image_hooks.dart';
+import 'package:dnd/models/locations/location.dart';
 import 'package:dnd/models/locations/location_data.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:get/get.dart';
+import 'package:just_audio/just_audio.dart';
 
-class CreateLocationPage extends HookWidget {
+class EditLocationPage extends HookWidget {
+  EditLocationPage({this.location});
+
+  final Location location;
+
   @override
   Widget build(BuildContext context) {
-    final nameController = useTextEditingController();
+    final nameController = useTextEditingController(
+      text: location?.name,
+    );
     final locationImage = useImagePicker();
     final trackSelector = useFilePicker(FileType.audio);
     final isSendingData = useState(false);
+    final audioPlayer = AudioPlayer();
+
+    useEffect(() {
+      return () async {
+        await audioPlayer.stop();
+        await audioPlayer.dispose();
+      };
+    }, []);
 
     return Scaffold(
       appBar: AppBar(title: Text('Создать локацию')),
@@ -42,7 +58,9 @@ class CreateLocationPage extends HookWidget {
               height: 200,
               width: 320,
               child: locationImage.image == null
-                  ? Container()
+                  ? location?.imageUrl != null
+                      ? Image.network(location.imageUrl)
+                      : Container()
                   : Image.memory(locationImage.image),
             ),
             const SizedBox(height: 24),
@@ -58,7 +76,26 @@ class CreateLocationPage extends HookWidget {
                   child: Text('Выбрать трек для локации'),
                 ),
                 const SizedBox(width: 16),
-                Text(trackSelector.fileName ?? ''),
+                if (location?.trackUrl != null) ...[
+                  GestureDetector(
+                    onTap: () async {
+                      if (audioPlayer.playerState.playing) {
+                        await audioPlayer.stop();
+                        return;
+                      }
+
+                      await audioPlayer.setUrl(location.trackUrl);
+                      await audioPlayer.play();
+                    },
+                    child: Icon(Icons.play_arrow),
+                  ),
+                  const SizedBox(width: 16),
+                ],
+                Text(
+                  trackSelector.fileBytes ?? location?.trackUrl != null
+                      ? 'Трек уже выбран (но можно заменить)'
+                      : '',
+                ),
               ],
             ),
             const Divider(height: 32),
@@ -74,10 +111,17 @@ class CreateLocationPage extends HookWidget {
                       );
 
                       isSendingData.value = true;
-                      controller
-                          .updateLocation(location)
-                          .then((_) => isSendingData.value = false)
-                          .catchError((_) => isSendingData.value = false);
+
+                      final updateOperation = controller.updateLocation(
+                        location,
+                        existingImageUrl: this.location?.imageUrl,
+                        existingTrackUrl: this.location?.trackUrl,
+                      );
+
+                      updateOperation.then((_) {
+                        isSendingData.value = false;
+                        Get.back();
+                      }).catchError((_) => isSendingData.value = false);
                     },
               child: SizedBox(
                 height: 40,

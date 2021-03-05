@@ -1,6 +1,6 @@
 import 'package:dnd/controllers/location_controller.dart';
 import 'package:dnd/models/locations/location.dart';
-import 'package:dnd/presentation/locations/create_location_page.dart';
+import 'package:dnd/presentation/locations/edit_location_page.dart';
 import 'package:dnd/presentation/locations/location_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -34,7 +34,7 @@ class LocationsPage extends StatelessWidget {
             onError: (error) => LocationsErrorStateWidget(),
           ),
           floatingActionButton: FloatingActionButton(
-            onPressed: () => Get.to(() => CreateLocationPage()),
+            onPressed: () => Get.to(() => EditLocationPage()),
             child: Icon(Icons.add),
           ),
         );
@@ -80,7 +80,7 @@ class NoLocationsWidget extends StatelessWidget {
           Text('Нет локаций'),
           const SizedBox(height: 16),
           ElevatedButton(
-            onPressed: () => Get.to(CreateLocationPage()),
+            onPressed: () => Get.to(EditLocationPage()),
             child: Text('Создать'),
           ),
         ],
@@ -118,6 +118,23 @@ class LocationItemWidget extends StatelessWidget {
               Container(
                 constraints: BoxConstraints.expand(),
                 color: Colors.grey.withAlpha(80),
+              ),
+              Positioned(
+                top: 16,
+                right: 16,
+                child: GestureDetector(
+                  onTap: () => Get.to(
+                    () => EditLocationPage(location: location),
+                  ),
+                  child: Container(
+                    height: 32,
+                    width: 32,
+                    child: Icon(
+                      Icons.edit,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
               ),
               Positioned(
                 left: 16,
