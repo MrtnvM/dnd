@@ -34,7 +34,9 @@ class EditLocationPage extends HookWidget {
     }, []);
 
     return Scaffold(
-      appBar: AppBar(title: Text('Создать локацию')),
+      appBar: AppBar(
+          title: Text(
+              '${location == null ? 'Создать' : 'Отредактировать'} локацию')),
       body: Container(
         padding: EdgeInsets.all(24),
         child: Column(
@@ -91,11 +93,14 @@ class EditLocationPage extends HookWidget {
                   ),
                   const SizedBox(width: 16),
                 ],
-                Text(
-                  trackSelector.fileBytes ?? location?.trackUrl != null
-                      ? 'Трек уже выбран (но можно заменить)'
-                      : '',
-                ),
+                if (trackSelector.fileBytes != null)
+                  Text(trackSelector.fileName)
+                else
+                  Text(
+                    location?.trackUrl != null
+                        ? 'Трек уже выбран (но можно заменить)'
+                        : '',
+                  ),
               ],
             ),
             const Divider(height: 32),
@@ -114,6 +119,7 @@ class EditLocationPage extends HookWidget {
 
                       final updateOperation = controller.updateLocation(
                         location,
+                        id: this.location?.id,
                         existingImageUrl: this.location?.imageUrl,
                         existingTrackUrl: this.location?.trackUrl,
                       );
@@ -128,8 +134,14 @@ class EditLocationPage extends HookWidget {
                 width: 180,
                 child: Center(
                   child: isSendingData.value
-                      ? CircularProgressIndicator()
-                      : Text('Создать локацию'),
+                      ? SizedBox(
+                          height: 28,
+                          width: 28,
+                          child: CircularProgressIndicator(),
+                        )
+                      : Text(
+                          '${location == null ? 'Создать' : 'Отредактировать'} локацию',
+                        ),
                 ),
               ),
             ),

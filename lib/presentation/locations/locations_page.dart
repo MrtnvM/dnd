@@ -137,6 +137,42 @@ class LocationItemWidget extends StatelessWidget {
                 ),
               ),
               Positioned(
+                top: 16,
+                left: 16,
+                child: GestureDetector(
+                  onTap: () => Get.dialog(
+                    AlertDialog(
+                      title: Text('Точно хочешь удалить?'),
+                      actions: [
+                        TextButton(onPressed: Get.back, child: Text('Отмена')),
+                        TextButton(
+                          onPressed: () async {
+                            await LocationController.to.deleteLocation(
+                              location.id,
+                            );
+
+                            LocationController.to.getLocations();
+                            Get.back();
+                          },
+                          child: Text(
+                            'Удалить',
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  child: Container(
+                    height: 32,
+                    width: 32,
+                    child: Icon(
+                      Icons.remove_circle,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
                 left: 16,
                 bottom: 16,
                 child: Text(

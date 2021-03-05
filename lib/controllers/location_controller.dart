@@ -3,6 +3,7 @@ import 'package:dnd/models/locations/location.dart';
 import 'package:dnd/models/locations/location_data.dart';
 import 'package:dnd/services/storage_service.dart';
 import 'package:get/get.dart';
+import 'package:uuid/uuid.dart';
 
 class LocationController extends GetxController
     with StateMixin<List<Location>> {
@@ -13,6 +14,7 @@ class LocationController extends GetxController
 
   Future<void> updateLocation(
     LocationData location, {
+    String id,
     String existingImageUrl,
     String existingTrackUrl,
   }) async {
@@ -37,12 +39,13 @@ class LocationController extends GetxController
     }
 
     final locationModel = Location(
+      id: id ?? Uuid().v4(),
       name: location.name,
       imageUrl: imageUrl,
       trackUrl: trackUrl,
     );
 
-    final docRef = _firestore.collection('locations').doc(location.name);
+    final docRef = _firestore.collection('locations').doc(locationModel.id);
     final doc = await docRef.get();
     final locationJson = locationModel.toJson();
 
@@ -53,6 +56,10 @@ class LocationController extends GetxController
     }
 
     getLocations();
+  }
+
+  Future<void> deleteLocation(String id) async {
+    await _firestore.collection('locations').doc(id).delete();
   }
 
   Future<List<Location>> getLocations() async {
