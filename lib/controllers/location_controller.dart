@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:html' as html;
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dnd/models/locations/location.dart';
 import 'package:dnd/models/locations/location_data.dart';
@@ -79,5 +82,23 @@ class LocationController extends GetxController
     }
 
     return locations;
+  }
+
+  void backupLocations(List<Location> locations) {
+    final jsonData = locations.map((l) => l.toJson()).toList();
+    final text = json.encode(jsonData);
+    final bytes = utf8.encode(text);
+    final blob = html.Blob([bytes]);
+    final url = html.Url.createObjectUrlFromBlob(blob);
+    final anchor = html.document.createElement('a') as html.AnchorElement
+      ..href = url
+      ..style.display = 'none'
+      ..download = 'locations.json';
+    html.document.body.children.add(anchor);
+
+    anchor.click();
+
+    html.document.body.children.remove(anchor);
+    html.Url.revokeObjectUrl(url);
   }
 }
