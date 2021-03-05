@@ -126,7 +126,7 @@ class LocationItemWidget extends StatelessWidget {
                   location.name ?? '',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 22,
+                    fontSize: 25,
                   ),
                 ),
               )
