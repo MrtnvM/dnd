@@ -34,9 +34,7 @@ class EnemyWidget extends StatelessWidget {
   Widget _buildEnemy() {
     return Positioned.fill(
       top: 0,
-      child: Image.network(
-        'https://firebasestorage.googleapis.com/v0/b/dungeon-and-dragons-53283.appspot.com/o/magician.jpg?alt=media&token=827d3c1d-2f1a-4957-9fc5-cd8b3eae1a90',
-      ),
+      child: Image.network(enemy.imageUrl),
     );
   }
 
