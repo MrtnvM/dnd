@@ -1,3 +1,4 @@
+import 'package:dnd/controllers/enemy_controller.dart';
 import 'package:dnd/controllers/location_controller.dart';
 import 'package:dnd/presentation/dnd_app.dart';
 import 'package:dnd/services/storage_service.dart';
@@ -10,6 +11,7 @@ void main() async {
 
   Get.put(StorageService());
   Get.put(LocationController());
+  Get.put(EnemyController());
 
   runApp(DndApp());
 }

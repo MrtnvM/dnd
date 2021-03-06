@@ -1,17 +1,13 @@
+import 'package:dnd/models/enemies/enemy.dart';
 import 'package:dnd/presentation/enemies/armor_indicator.dart';
 import 'package:dnd/presentation/enemies/health_bar.dart';
 import 'package:dnd/presentation/enemies/health_indicator.dart';
 import 'package:flutter/material.dart';
 
 class EnemyWidget extends StatelessWidget {
-  const EnemyWidget({
-    Key key,
-    @required this.health,
-    @required this.maxHealth,
-  }) : super(key: key);
+  const EnemyWidget({Key key, @required this.enemy}) : super(key: key);
 
-  final double health;
-  final double maxHealth;
+  final Enemy enemy;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +20,10 @@ class EnemyWidget extends StatelessWidget {
       child: Stack(
         children: [
           _buildEnemy(),
-          HealthBar(health: health, maxHealth: maxHealth),
+          HealthBar(
+            health: enemy.currentHealth,
+            maxHealth: enemy.maxHealth,
+          ),
           _buildHealthIndicator(),
           _buildArmorIndicator(),
         ],
@@ -45,7 +44,7 @@ class EnemyWidget extends StatelessWidget {
     return Positioned(
       top: 36,
       left: 16,
-      child: HealthIndicator(value: health),
+      child: HealthIndicator(value: enemy.currentHealth),
     );
   }
 
@@ -53,7 +52,7 @@ class EnemyWidget extends StatelessWidget {
     return Positioned(
       top: 36,
       right: 16,
-      child: ArmorIndicator(value: health),
+      child: ArmorIndicator(value: enemy.armor),
     );
   }
 }

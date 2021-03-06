@@ -1,4 +1,6 @@
-class Location {
+import 'package:dnd/models/game_object.dart';
+
+class Location extends GameObject {
   final String id;
   final String name;
   final String imageUrl;

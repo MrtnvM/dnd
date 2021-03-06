@@ -1,11 +1,8 @@
-import 'dart:typed_data';
-
 import 'package:dnd/controllers/location_controller.dart';
 import 'package:dnd/hooks/file_hooks.dart';
 import 'package:dnd/hooks/image_hooks.dart';
 import 'package:dnd/models/locations/location.dart';
 import 'package:dnd/models/locations/location_data.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:get/get.dart';
@@ -149,21 +146,5 @@ class EditLocationPage extends HookWidget {
         ),
       ),
     );
-  }
-
-  Future<void> uploadData(Uint8List data, String path) async {
-    final ref = FirebaseStorage.instance.ref(path);
-
-    try {
-      final uploadTask = ref.putData(data);
-      uploadTask.snapshotEvents.listen((e) {
-        final progress = e.bytesTransferred / e.totalBytes;
-        print('PROGRESS: ${(progress * 100).toStringAsFixed(2)}');
-      });
-
-      await uploadTask;
-    } on FirebaseException catch (e) {
-      print(e);
-    }
   }
 }
