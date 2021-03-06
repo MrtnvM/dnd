@@ -73,7 +73,12 @@ class LocationPage extends HookWidget {
   }
 
   Widget _buildEnemy() {
-    return Center(child: EnemyWidget());
+    return Center(
+      child: EnemyWidget(
+        health: 16,
+        maxHealth: 18,
+      ),
+    );
   }
 
   Widget _buildBackground(AnimationController controller) {
