@@ -18,6 +18,12 @@ class LocationController extends GetxController
   static LocationController get to => Get.find();
 
   Future<Location> getLocation(String id) async {
+    print(id);
+
+    if (id == null) {
+      return null;
+    }
+
     final doc = await _locationsCollection.doc(id).get();
     final location = Location.fromJson(doc.data());
     return location;

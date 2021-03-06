@@ -16,6 +16,10 @@ class EnemyController extends GetxController with StateMixin<List<Enemy>> {
   static EnemyController get to => Get.find();
 
   Future<Enemy> getEnemy(String id) async {
+    if (id == null) {
+      return null;
+    }
+
     final doc = await _enemiesCollection.doc(id).get();
     final enemy = Enemy.fromJson(doc.data());
     return enemy;

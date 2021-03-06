@@ -156,55 +156,58 @@ class ItemWidget<T extends GameObject> extends StatelessWidget {
                 constraints: BoxConstraints.expand(),
                 color: Colors.grey.withAlpha(80),
               ),
-              Positioned(
-                top: 16,
-                right: 16,
-                child: GestureDetector(
-                  onTap: () => goToItemEditor(item),
-                  child: Container(
-                    height: 32,
-                    width: 32,
-                    child: Icon(
-                      Icons.edit,
-                      color: Colors.white,
+              if (goToItemEditor != null)
+                Positioned(
+                  top: 16,
+                  right: 16,
+                  child: GestureDetector(
+                    onTap: () => goToItemEditor(item),
+                    child: Container(
+                      height: 32,
+                      width: 32,
+                      child: Icon(
+                        Icons.edit,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Positioned(
-                top: 16,
-                left: 16,
-                child: GestureDetector(
-                  onTap: () => Get.dialog(
-                    AlertDialog(
-                      title: Text('Точно хочешь удалить?'),
-                      actions: [
-                        TextButton(onPressed: Get.back, child: Text('Отмена')),
-                        TextButton(
-                          onPressed: () async {
-                            await deleteItem(item.id);
+              if (deleteItem != null)
+                Positioned(
+                  top: 16,
+                  left: 16,
+                  child: GestureDetector(
+                    onTap: () => Get.dialog(
+                      AlertDialog(
+                        title: Text('Точно хочешь удалить?'),
+                        actions: [
+                          TextButton(
+                              onPressed: Get.back, child: Text('Отмена')),
+                          TextButton(
+                            onPressed: () async {
+                              await deleteItem(item.id);
 
-                            loadItems();
-                            Get.back();
-                          },
-                          child: Text(
-                            'Удалить',
-                            style: TextStyle(color: Colors.red),
-                          ),
-                        )
-                      ],
+                              loadItems();
+                              Get.back();
+                            },
+                            child: Text(
+                              'Удалить',
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                  child: Container(
-                    height: 32,
-                    width: 32,
-                    child: Icon(
-                      Icons.remove_circle,
-                      color: Colors.white,
+                    child: Container(
+                      height: 32,
+                      width: 32,
+                      child: Icon(
+                        Icons.remove_circle,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
-              ),
               Positioned(
                 left: 16,
                 bottom: 16,

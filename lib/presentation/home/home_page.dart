@@ -1,5 +1,6 @@
 import 'package:dnd/controllers/game_controller.dart';
 import 'package:dnd/presentation/home/admin_page.dart';
+import 'package:dnd/presentation/home/control_page.dart';
 import 'package:dnd/presentation/home/game_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -32,6 +33,13 @@ class HomePage extends HookWidget {
                 Get.to(() => GamePage());
               },
             ),
+            _buildButton(
+              'Перейти к управлению игры',
+              () {
+                GameController.to.isGame = true;
+                Get.to(() => ControlPage());
+              },
+            ),
           ],
         ),
       ),
@@ -44,12 +52,12 @@ class HomePage extends HookWidget {
       child: ElevatedButton(
         onPressed: onPress,
         child: SizedBox(
-          height: 40,
-          width: 200,
+          height: 50,
+          width: 300,
           child: Center(
             child: Text(
               title,
-              style: TextStyle(fontSize: 20),
+              style: TextStyle(fontSize: 23),
             ),
           ),
         ),

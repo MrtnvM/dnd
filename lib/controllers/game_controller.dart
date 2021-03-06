@@ -104,7 +104,7 @@ class GameController extends GetxController {
   }
 
   Future<void> selectLocation(String locationId) async {
-    final game = await getCurrentGame();
+    final game = currrentGame.value;
 
     if (game.currentLocationId == locationId) {
       return;
@@ -120,7 +120,7 @@ class GameController extends GetxController {
   }
 
   Future<void> selectEnemy(String enemyId) async {
-    final game = await getCurrentGame();
+    final game = currrentGame.value;
 
     if (game.currentEnemyId == enemyId) {
       return;
