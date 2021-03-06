@@ -1,3 +1,4 @@
+import 'package:dnd/controllers/game_controller.dart';
 import 'package:dnd/models/locations/location.dart';
 import 'package:dnd/presentation/enemies/enemy_widget.dart';
 import 'package:flutter/material.dart';
@@ -66,6 +67,7 @@ class LocationPage extends HookWidget {
         children: [
           _buildBackground(imageAnimationController),
           _buildLocationTitle(),
+          _buildEnemy(context),
         ],
       ),
     );
@@ -104,6 +106,21 @@ class LocationPage extends HookWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildEnemy(BuildContext context) {
+    final gameController = Get.find<GameController>();
+
+    return Center(
+      child: Obx(() {
+        final enemy = gameController.currentEnemy.value;
+        if (enemy == null) {
+          return Container();
+        }
+
+        return EnemyWidget(enemy: enemy);
+      }),
     );
   }
 }

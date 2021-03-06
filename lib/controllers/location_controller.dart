@@ -10,10 +10,18 @@ import 'package:uuid/uuid.dart';
 
 class LocationController extends GetxController
     with StateMixin<List<Location>> {
-  final _firestore = FirebaseFirestore.instance;
+  final _locationsCollection =
+      FirebaseFirestore.instance.collection('locations');
+
   var locations = <Location>[];
 
   static LocationController get to => Get.find();
+
+  Future<Location> getLocation(String id) async {
+    final doc = await _locationsCollection.doc(id).get();
+    final location = Location.fromJson(doc.data());
+    return location;
+  }
 
   Future<void> updateLocation(
     LocationData location, {
@@ -48,7 +56,7 @@ class LocationController extends GetxController
       trackUrl: trackUrl,
     );
 
-    final docRef = _firestore.collection('locations').doc(locationModel.id);
+    final docRef = _locationsCollection.doc(locationModel.id);
     final doc = await docRef.get();
     final locationJson = locationModel.toJson();
 
@@ -62,14 +70,14 @@ class LocationController extends GetxController
   }
 
   Future<void> deleteLocation(String id) async {
-    await _firestore.collection('locations').doc(id).delete();
+    await _locationsCollection.doc(id).delete();
   }
 
   Future<List<Location>> getLocations() async {
     change(locations, status: RxStatus.loading());
 
     try {
-      final snapshots = await _firestore.collection('locations').get();
+      final snapshots = await _locationsCollection.get();
       locations = snapshots.docs //
           .map((s) => s.data())
           .map((l) => Location.fromJson(l))

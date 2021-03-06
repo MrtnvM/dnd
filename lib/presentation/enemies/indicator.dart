@@ -29,7 +29,7 @@ class Indicator extends StatelessWidget {
               child: Text(
                 '$value',
                 style: TextStyle(
-                  fontSize: 25,
+                  fontSize: 23,
                   color: Colors.white.withAlpha(200),
                   fontWeight: FontWeight.w600,
                 ),

@@ -6,7 +6,7 @@ import 'package:dnd/widgets/containers/grid_editor.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class NewLocationsPage extends StatelessWidget {
+class LocationsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<LocationController>(

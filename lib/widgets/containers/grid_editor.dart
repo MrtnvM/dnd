@@ -37,7 +37,7 @@ class GridEditor<T extends GameObject> extends StatelessWidget {
   }
 
   Widget _buildBody(BuildContext context) {
-    if (controllerStatus == RxStatus.loading()) {
+    if (controllerStatus == RxStatus.loading() && items.isEmpty) {
       return Center(child: CircularProgressIndicator());
     }
 
