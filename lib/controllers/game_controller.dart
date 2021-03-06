@@ -9,11 +9,15 @@ import 'package:dnd/models/locations/location.dart';
 import 'package:get/get.dart';
 
 class GameController extends GetxController {
+  bool isGame = false;
+
   final gameId = 'game1';
   final currrentGame = Rx<Game>(null);
   final currentEnemy = Rx<Enemy>(null);
   final currentLocation = Rx<Location>(null);
   final _firestore = FirebaseFirestore.instance;
+
+  static GameController get to => Get.find();
 
   StreamSubscription _gameSubscription;
   StreamSubscription _enemySubscription;
@@ -28,6 +32,7 @@ class GameController extends GetxController {
 
     _gameSubscription = gameRef //
         .snapshots()
+        .where((s) => s.data() != null)
         .map((s) => Game.fromJson(s.data()))
         .listen((game) {
       currrentGame.value = game;
@@ -37,9 +42,10 @@ class GameController extends GetxController {
 
       if (currentLocation.value?.id != locationId) {
         if (locationId != null) {
-          LocationController.to
-              .getLocation(locationId)
-              .then((l) => currentLocation.value = l);
+          LocationController.to.getLocation(locationId).then((l) {
+            print('Location: ${l.name}');
+            currentLocation.value = l;
+          });
         } else {
           currentLocation.value = null;
         }

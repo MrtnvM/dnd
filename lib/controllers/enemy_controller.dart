@@ -25,6 +25,7 @@ class EnemyController extends GetxController with StateMixin<List<Enemy>> {
     return _enemiesCollection
         .doc(id)
         .snapshots()
+        .where((s) => s.data() != null)
         .map((s) => Enemy.fromJson(s.data()));
   }
 
