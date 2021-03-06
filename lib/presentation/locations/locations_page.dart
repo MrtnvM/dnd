@@ -2,190 +2,23 @@ import 'package:dnd/controllers/location_controller.dart';
 import 'package:dnd/models/locations/location.dart';
 import 'package:dnd/presentation/locations/edit_location_page.dart';
 import 'package:dnd/presentation/locations/location_page.dart';
+import 'package:dnd/widgets/containers/grid_editor.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class LocationsPage extends StatelessWidget {
+class NewLocationsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<LocationController>(
-      initState: (c) => LocationController.to.getLocations(),
-      builder: (controller) {
-        return Scaffold(
-          appBar: AppBar(title: Text('Локации')),
-          body: controller.obx(
-            (locations) => Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Scrollbar(
-                child: GridView.count(
-                  crossAxisCount: 4,
-                  mainAxisSpacing: 16,
-                  crossAxisSpacing: 24,
-                  childAspectRatio: 1.5,
-                  children: [
-                    for (final location in locations)
-                      LocationItemWidget(location: location),
-                  ],
-                ),
-              ),
-            ),
-            onLoading: Center(child: CircularProgressIndicator()),
-            onEmpty: NoLocationsWidget(),
-            onError: (error) => LocationsErrorStateWidget(),
-          ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () => Get.to(() => EditLocationPage()),
-            child: Icon(Icons.add),
-          ),
-        );
-      },
-    );
-  }
-}
-
-class LocationsErrorStateWidget extends StatelessWidget {
-  const LocationsErrorStateWidget({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text('Не удалось загрузить локации'),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () => LocationController.to.getLocations(),
-            child: Text('Повторить'),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class NoLocationsWidget extends StatelessWidget {
-  const NoLocationsWidget({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text('Нет локаций'),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () => Get.to(EditLocationPage()),
-            child: Text('Создать'),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class LocationItemWidget extends StatelessWidget {
-  const LocationItemWidget({
-    Key key,
-    @required this.location,
-  }) : super(key: key);
-
-  final Location location;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => Get.to(() => LocationPage(location: location)),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Color(0xffcccccc),
-          ),
-          child: Stack(
-            children: [
-              Positioned.fill(
-                child: FittedBox(
-                  fit: BoxFit.cover,
-                  child: Image.network(location.imageUrl),
-                ),
-              ),
-              Container(
-                constraints: BoxConstraints.expand(),
-                color: Colors.grey.withAlpha(80),
-              ),
-              Positioned(
-                top: 16,
-                right: 16,
-                child: GestureDetector(
-                  onTap: () => Get.to(
-                    () => EditLocationPage(location: location),
-                  ),
-                  child: Container(
-                    height: 32,
-                    width: 32,
-                    child: Icon(
-                      Icons.edit,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-              Positioned(
-                top: 16,
-                left: 16,
-                child: GestureDetector(
-                  onTap: () => Get.dialog(
-                    AlertDialog(
-                      title: Text('Точно хочешь удалить?'),
-                      actions: [
-                        TextButton(onPressed: Get.back, child: Text('Отмена')),
-                        TextButton(
-                          onPressed: () async {
-                            await LocationController.to.deleteLocation(
-                              location.id,
-                            );
-
-                            LocationController.to.getLocations();
-                            Get.back();
-                          },
-                          child: Text(
-                            'Удалить',
-                            style: TextStyle(color: Colors.red),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  child: Container(
-                    height: 32,
-                    width: 32,
-                    child: Icon(
-                      Icons.remove_circle,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-              Positioned(
-                left: 16,
-                bottom: 16,
-                child: Text(
-                  location.name ?? '',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 25,
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
+      initState: (_) => LocationController.to.getLocations(),
+      builder: (controller) => GridEditor<Location>(
+        title: 'Локации',
+        items: controller.locations,
+        loadItems: () => controller.getLocations(),
+        deleteItem: (id) => controller.deleteLocation(id),
+        controllerStatus: controller.status,
+        goToItemEditor: (l) => Get.to(() => EditLocationPage(location: l)),
+        goToItem: (l) => Get.to(() => LocationPage(location: l)),
       ),
     );
   }
