@@ -10,7 +10,7 @@ import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 
 class EnemyController extends GetxController with StateMixin<List<Enemy>> {
-  final _enemiesCollection = FirebaseFirestore.instance.collection('enemies');
+  final enemiesCollection = FirebaseFirestore.instance.collection('enemies');
   var enemies = <Enemy>[];
 
   static EnemyController get to => Get.find();
@@ -20,13 +20,13 @@ class EnemyController extends GetxController with StateMixin<List<Enemy>> {
       return null;
     }
 
-    final doc = await _enemiesCollection.doc(id).get();
+    final doc = await enemiesCollection.doc(id).get();
     final enemy = Enemy.fromJson(doc.data());
     return enemy;
   }
 
   Stream<Enemy> subscribeToEnemy(String id) {
-    return _enemiesCollection
+    return enemiesCollection
         .doc(id)
         .snapshots()
         .where((s) => s.data() != null)
@@ -54,7 +54,7 @@ class EnemyController extends GetxController with StateMixin<List<Enemy>> {
       maxHealth: enemy.maxHealth,
     );
 
-    final docRef = _enemiesCollection.doc(enemyModel.id);
+    final docRef = enemiesCollection.doc(enemyModel.id);
     final doc = await docRef.get();
     final enemyJson = enemyModel.toJson();
 
@@ -68,14 +68,14 @@ class EnemyController extends GetxController with StateMixin<List<Enemy>> {
   }
 
   Future<void> deleteEnemy(String id) async {
-    await _enemiesCollection.doc(id).delete();
+    await enemiesCollection.doc(id).delete();
   }
 
   Future<List<Enemy>> getEnemies() async {
     change(enemies, status: RxStatus.loading());
 
     try {
-      final snapshots = await _enemiesCollection.get();
+      final snapshots = await enemiesCollection.get();
       enemies = snapshots.docs //
           .map((s) => s.data())
           .map((l) => Enemy.fromJson(l))

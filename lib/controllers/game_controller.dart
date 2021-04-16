@@ -128,9 +128,26 @@ class GameController extends GetxController {
 
     final updatedGame = game.copyWith(
       currentEnemyId: enemyId,
+      currentLocationId: game.currentLocationId,
     );
 
     await updateGame(updatedGame);
+  }
+
+  Future<void> updateEnemy(double health, double armor) async {
+    final enemyId = currentEnemy.value?.id;
+    if (enemyId == null) {
+      return;
+    }
+
+    final enemy = await EnemyController.to.getEnemy(enemyId);
+    final newEnemy = enemy.copyWith(
+      currentHealth: health,
+      armor: armor,
+    );
+
+    final enemyRef = EnemyController.to.enemiesCollection.doc(enemyId);
+    await enemyRef.update(newEnemy.toJson());
   }
 
   Future<void> updateGame(Game game) async {

@@ -33,14 +33,14 @@ class Game {
 
   Game copyWith({
     String id,
-    String currentLocationId,
-    String currentEnemyId,
+    @required String currentLocationId,
+    @required String currentEnemyId,
     String currentHeroId,
   }) {
     return Game(
       id: id ?? this.id,
-      currentLocationId: currentLocationId ?? this.currentLocationId,
-      currentEnemyId: currentEnemyId ?? this.currentEnemyId,
+      currentLocationId: currentLocationId,
+      currentEnemyId: currentEnemyId,
       currentHeroId: currentHeroId ?? this.currentHeroId,
     );
   }

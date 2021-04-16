@@ -39,4 +39,22 @@ class Enemy extends GameObject {
       'armor': armor,
     };
   }
+
+  Enemy copyWith({
+    String id,
+    String name,
+    String imageUrl,
+    double currentHealth,
+    double maxHealth,
+    double armor,
+  }) {
+    return Enemy(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      imageUrl: imageUrl ?? this.imageUrl,
+      currentHealth: currentHealth ?? this.currentHealth,
+      maxHealth: maxHealth ?? this.maxHealth,
+      armor: armor ?? this.armor,
+    );
+  }
 }
